@@ -16,5 +16,5 @@ FROM python:3.9
 WORKDIR /app
 COPY --from=tester /usr/local/lib/python3.9/site-packages /usr/local/lib/python3.9/site-packages
 COPY --from=tester /app .
-EXPOSE 8080
+EXPOSE 5000
 CMD ["python3", "app.py"]
