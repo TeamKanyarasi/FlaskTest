@@ -1,7 +1,11 @@
 # FlaskTest
 ## Objective :
 To create a docker image and deploy using Jenkins.
-
+## Prerequisites
+1. Python
+2. Docker
+3. Jenkins
+4. Kubectl
 ### App.py
 Modify the file such it accepts all the hosts and specify the port number according to your choice.
 ```
@@ -102,3 +106,43 @@ pipeline{
 ![Screenshot (190)](https://github.com/TeamKanyarasi/FlaskTest/assets/139607786/38b7deca-2232-49c8-9420-92c00308c27d)
 
 ![Screenshot (191)](https://github.com/TeamKanyarasi/FlaskTest/assets/139607786/e1d95c7c-ce5d-4ff9-9fef-479eab7248b2)
+
+### Deployment.yml file
+```
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: flasktest-cy
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: flasktest-cy
+  template:
+    metadata:
+      labels:
+        app: flasktest-cy
+    spec:
+      containers:
+      - name: flasktest-microservice
+        image: flasktest:latest
+        ports:
+        - containerPort: 5000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: flasktest-service
+spec:
+  selector:
+    app: flasktest-cy
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 5000
+  type: LoadBalancer
+```
+Command to deploy the application to Kubernetes.
+```
+kubectl apply -f <your-deployment-file-name>
+```
