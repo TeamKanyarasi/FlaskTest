@@ -34,3 +34,8 @@ COPY --from=builder /app .
 EXPOSE 8080
 CMD ["python3", "app.py"]
 ```
+![Screenshot (186)](https://github.com/TeamKanyarasi/FlaskTest/assets/139607786/18e52105-90ab-4210-9306-34d150346556)
+
+![Screenshot (187)](https://github.com/TeamKanyarasi/FlaskTest/assets/139607786/f11f69d1-f6e9-4a05-82a4-afda4b1172d8)
+
+
