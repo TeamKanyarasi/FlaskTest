@@ -45,4 +45,60 @@ CMD ["python3", "app.py"]
 
 ![Screenshot (187)](https://github.com/TeamKanyarasi/FlaskTest/assets/139607786/f11f69d1-f6e9-4a05-82a4-afda4b1172d8)
 
+### AccessToken for Docker and Jenkins connection
+![Screenshot (188)](https://github.com/TeamKanyarasi/FlaskTest/assets/139607786/25d49be7-701b-426c-b87b-d8b6a35a7a2a)
 
+Add Jenkins in Docker group to run `docker` commands.
+```
+sudo usermod -aG docker jenkins
+sudo systemctl restart docker
+sudo systemctl restart jenkins
+```
+### Jenkinsfile
+Jenkinsfile to automate the docker image creation.
+```
+pipeline{
+    agent any
+    stages{
+        stage("Clone the repository"){
+            steps{
+                echo "Initiating the Git checkout..."
+                git url: 'https://github.com/TeamKanyarasi/FlaskTest.git', branch: 'main'
+            }
+        }
+        stage("Install requirements"){
+            steps{
+                echo "Installing the required applications and dependencies..."
+                sh '''
+                pip3 install -r requirements.txt
+                '''
+            }
+        }
+        stage("Run Tests"){
+            steps{
+                echo "Running the test scripts..."
+                sh '''
+                python3 test_app.py
+                '''
+            }
+        }
+        stage("Build Docker Image"){
+            // when{
+            //     allOf{
+            //         expression{
+            //             currentBuild.result == 'SUCCESS'
+            //         }
+            //     }
+            // }
+            steps{
+                sh 'docker build -t flasktest .'
+            }
+        }
+    }
+}
+```
+![Screenshot (189)](https://github.com/TeamKanyarasi/FlaskTest/assets/139607786/aa62cb6e-3865-4a5e-9d87-e77c3d688fda)
+
+![Screenshot (190)](https://github.com/TeamKanyarasi/FlaskTest/assets/139607786/38b7deca-2232-49c8-9420-92c00308c27d)
+
+![Screenshot (191)](https://github.com/TeamKanyarasi/FlaskTest/assets/139607786/e1d95c7c-ce5d-4ff9-9fef-479eab7248b2)
