@@ -14,7 +14,7 @@ def hello():
     return 'Hello, World!'
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=8080, debug=True)
+    app.run(host='0.0.0.0', port=5000, debug=True)
 ```
 
 ### Dockerfile
@@ -26,12 +26,19 @@ WORKDIR /app
 COPY . .
 RUN pip3 install -r requirements.txt
 
-# --- Release with Python ----
-FROM python:3.9
+# --- Test with Python ----
+FROM python:3.9 AS tester
 WORKDIR /app
 COPY --from=builder /usr/local/lib/python3.9/site-packages /usr/local/lib/python3.9/site-packages
 COPY --from=builder /app .
-EXPOSE 8080
+CMD [ "python3", "test_app.py" ]
+
+# --- Release with Python ----
+FROM python:3.9
+WORKDIR /app
+COPY --from=tester /usr/local/lib/python3.9/site-packages /usr/local/lib/python3.9/site-packages
+COPY --from=tester /app .
+EXPOSE 5000
 CMD ["python3", "app.py"]
 ```
 ![Screenshot (186)](https://github.com/TeamKanyarasi/FlaskTest/assets/139607786/18e52105-90ab-4210-9306-34d150346556)
