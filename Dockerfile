@@ -4,7 +4,7 @@ WORKDIR /app
 COPY . .
 RUN pip3 install -r requirements.txt
 
-# --- Release with Python ----
+# --- Test with Python ----
 FROM python:3.9 AS tester
 WORKDIR /app
 COPY --from=builder /usr/local/lib/python3.9/site-packages /usr/local/lib/python3.9/site-packages
